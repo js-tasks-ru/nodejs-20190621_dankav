@@ -8,7 +8,6 @@ describe('2-module-2-task', () => {
     it('стрим разбивает данные по строкам', (done) => {
       const lines = new LineSplitStream({encoding: 'utf-8'});
 
-      console.log('why?');
       const onData = sinon.spy();
 
       lines.on('data', onData);
