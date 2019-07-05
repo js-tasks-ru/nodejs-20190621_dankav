@@ -53,7 +53,7 @@ server.on('request', (req, res) => {
         
       req.pipe(limitStream).pipe(fileOut);
       req.on('aborted', () => {
-          fs.unlink(filepath);
+          fs.unlink(filepath, () => {});
           res.statusCode = 501;
           res.end('Connection was lost');
         });
@@ -62,7 +62,7 @@ server.on('request', (req, res) => {
         if (err && err.code == 'LIMIT_EXCEEDED'){
           res.statusCode = 413;
           res.end('File is too big'); 
-          fs.unlink(filepath);
+          fs.unlink(filepath, () => {});
         }
       });
 
@@ -70,7 +70,10 @@ server.on('request', (req, res) => {
         if(err && err.code == 'EEXIST' ) {
           res.statusCode = 409;
           res.end('File is already exist');
-        } 
+        } else {
+          res.statusCode = 500;
+          res.end(`Not expected error ${err.code}`);
+        }
       });
 
       fileOut.on('close', () =>{
