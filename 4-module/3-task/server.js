@@ -1,6 +1,7 @@
 const url = require('url');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 
 const server = new http.Server();
 
@@ -11,9 +12,30 @@ server.on('request', (req, res) => {
 
   switch (req.method) {
     case 'DELETE':
+      if ( path.dirname(pathname) != '.') {
+        res.statusCode = 400;
+        res.end('Path with dirs are not supported');
+        break;
+      }
+
+      fs.stat(filepath, (err, stats) => {
+        if ( err || !stats.isFile() ) {
+          res.statusCode = 404;
+          res.end('Not exist file');
+          return;
+        }
+
+        fs.unlink(filepath, ()=> {});
+        res.statusCode = 200;
+        res.end('sCode = 200;dirs are not supported');
+      });
+
+      req.on('end', () => {
+        res.statusCode = 200;
+        res.end('Path with dirs are not supported');
+      });
 
       break;
-
     default:
       res.statusCode = 501;
       res.end('Not implemented');
