@@ -32,7 +32,9 @@ router.post('/publish', async (ctx, next) => {
   let newMessage = ctx.request.body.message;
 
   if( !newMessage ) {
-    ctx.throw(500, 'Message should not be empty');
+    ctx.response.status = 500;
+    ctx.response.message = 'Message should not be empty';
+    return next();
   }
 
   for (resolve of connections ) {
