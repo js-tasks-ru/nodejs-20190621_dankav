@@ -31,9 +31,6 @@ router.post('/publish', async (ctx, next) => {
 
   let newMessage = ctx.request.body.message;
 
-  // console.log('ctx request', ctx.request.body.message);
-  // console.log('ctx newMessage', newMessage);
-  // console.log('connections', connections);
   if( !newMessage ) {
     ctx.throw(500, 'Message should not be empty');
   }
