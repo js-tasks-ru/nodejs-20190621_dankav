@@ -15,12 +15,12 @@ const productSchema = new mongoose.Schema({
     required: 'Product should have price',
   },
   category: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
     required: 'Category should not be empty',
   },
   subcategory: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: 'SubCategory should not be empty',
   },
   images: [{
