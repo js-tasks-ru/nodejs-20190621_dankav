@@ -4,18 +4,19 @@ const connection = require('../libs/connection');
 const subCategorySchema = new mongoose.Schema({
   title: {
     type: String,
-    required: 'Name of category should not be empty',
+    required: true,
   },
-  subcategories: [{
-    title: {
-      type: String,
-      required: 'Subcategory should have Title',
-    }
-  }],
 });
 
 const categorySchema = new mongoose.Schema({
+  title: {
+    type: String,
+    // required: 'Name of category should not be empty',
+    required: true,
+  },
   subcategories: [subCategorySchema]
+}, {
+  timestamps: true,
 });
 
 module.exports = connection.model('Category', categorySchema);
