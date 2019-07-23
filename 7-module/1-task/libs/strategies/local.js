@@ -9,22 +9,16 @@ module.exports = new LocalStrategy(
     async function(email, password, done) {
       // console.log('email', email);
       // console.log('password', password);
-      await User.findOne({ email })
-        .then( async (user) => {
-          // console.log('user', user);
+      const user = await User.findOne({ email });
 
-          if ( !user ) {
-            done(null, false, 'Нет такого пользователя');
-          }
+      if ( !user ) {
+        done(null, false, 'Нет такого пользователя');
+      }
 
-          if ( ! await user.checkPassword(password) ) {
-            done(null, false, 'Невереный пароль');
-          }
+      if ( ! await user.checkPassword(password) ) {
+        done(null, false, 'Невереный пароль');
+      }
 
-          done(null, user);
-        })
-        .catch((err) => {
-          done(err);
-        })
+      done(null, user);
     }
 );
