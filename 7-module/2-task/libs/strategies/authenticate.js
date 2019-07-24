@@ -3,20 +3,21 @@ const User = require('../../models/User');
 module.exports = async function authenticate(strategy, email, displayName, done) {
 
   if (! email ) {
-    done(null, false, 'Не указан email');
+    return done(null, false, 'Не указан email');
   }
 
-  const user = await User.findOne({email}).catch((err) => {
-    done(err);
-  });
+  User.findOne({ email })
+    .then(async (result) => {
 
-    // console.log('resuserult',user);
-  if ( !user ) {
-
-    // console.log('HERE');
-    const newUser = new User({email, displayName});
-    await User.save();
-    // console.log('result',result);
-    done(null, newUser, 'Пользователь создан');
-  }
+      if ( !result ) {
+        const newUser = await new User({email, displayName});
+        await newUser.save();
+        return done(null, newUser, 'Пользователь создан');
+      } 
+      
+      return done(null, result, 'Пользователь');
+    })
+    .catch((err) => {
+      done(err, false, 'Некорректный email.');
+    });
 };
