@@ -7,8 +7,6 @@ module.exports = new LocalStrategy(
       session: false
     },
     async function(email, password, done) {
-      // console.log('email', email);
-      // console.log('password', password);
       const user = await User.findOne({ email });
 
       if ( !user ) {
