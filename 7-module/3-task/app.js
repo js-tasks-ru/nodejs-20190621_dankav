@@ -14,6 +14,7 @@ const app = new Koa();
 app.use(require('koa-bodyparser')());
 
 app.use(async (ctx, next) => {
+  console.log('trys');
   try {
     await next();
   } catch (err) {
@@ -29,9 +30,12 @@ app.use(async (ctx, next) => {
 });
 
 app.use((ctx, next) => {
+  console.log('use login');
   ctx.login = async function(user) {
     const token = uuid();
+    console.log('token', token);
 
+    await Session.create({ token: token, user: user.id, lastVisit: new Date()});
     return token;
   };
 
