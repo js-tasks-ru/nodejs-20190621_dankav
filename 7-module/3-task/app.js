@@ -14,7 +14,6 @@ const app = new Koa();
 app.use(require('koa-bodyparser')());
 
 app.use(async (ctx, next) => {
-  console.log('trys');
   try {
     await next();
   } catch (err) {
@@ -30,10 +29,9 @@ app.use(async (ctx, next) => {
 });
 
 app.use((ctx, next) => {
-  console.log('use login');
   ctx.login = async function(user) {
     const token = uuid();
-    console.log('token', token);
+    // console.log('token', token);
 
     await Session.create({ token: token, user: user.id, lastVisit: new Date()});
     return token;
@@ -47,6 +45,19 @@ const router = new Router({prefix: '/api'});
 router.use(async (ctx, next) => {
   const header = ctx.request.get('Authorization');
   if (!header) return next();
+  // console.log('header', header);
+  const tokenToLook = header.split(' ')[1];
+  if (tokenToLook) {
+    const session = await Session.findOne({token: tokenToLook}).populate('user');
+    if (!session) {
+
+      ctx.status = 401;
+      ctx.body = {error: 'Неверный аутентификационный токен'};
+      return;
+    }
+    ctx.user = session.user;
+    await Session.updateOne({token: tokenToLook, lastVisit: new Date()});
+  }
 
   return next();
 });
@@ -60,7 +71,7 @@ router.post('/login', login);
 router.get('/oauth/:provider', oauth);
 router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
 
-router.get('/me', me);
+router.get('/me', mustBeAuthenticated, me);
 
 app.use(router.routes());
 
