@@ -28,7 +28,7 @@ app.use(async (ctx, next) => {
       ctx.status = err.status;
       ctx.body = {error: err.message};
     } else {
-      console.error(err);
+      // console.error(err);
       ctx.status = 500;
       ctx.body = {error: 'Internal server error'};
     }

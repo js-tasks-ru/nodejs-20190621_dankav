@@ -26,7 +26,7 @@ function socket(server) {
 
   io.on('connection', function(socket) {
     socket.on('message', async (msg) => {
-      console.log('socket.user', socket.user);
+      // console.log('socket.user', socket.user);
       const message = new Message({
         date: new Date(),
         user: socket.user.displayName,
@@ -34,7 +34,7 @@ function socket(server) {
         chat: socket.user.id,
       });
 
-      console.log(message);
+      // console.log(message);
       await message.save();
     });
   });
