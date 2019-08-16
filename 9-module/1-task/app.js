@@ -28,7 +28,7 @@ app.use(async (ctx, next) => {
       ctx.status = err.status;
       ctx.body = {error: err.message};
     } else {
-      console.error(err);
+      // console.error(err);
       ctx.status = 500;
       ctx.body = {error: 'Internal server error'};
     }
@@ -84,7 +84,7 @@ router.post('/confirm', confirm);
 router.get('/orders', mustBeAuthenticated, getOrdersList);
 router.post('/orders', mustBeAuthenticated, handleMongooseValidationError, checkout);
 
-router.get('/messages', messageList);
+router.get('/messages', mustBeAuthenticated, messageList);
 
 app.use(router.routes());
 
