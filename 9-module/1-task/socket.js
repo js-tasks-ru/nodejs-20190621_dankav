@@ -11,11 +11,13 @@ function socket(server) {
     
     if (!query.token) {
       next(new Error('anonymous sessions are not allowed'));
+      return;
     }
 
     const session = await Session.findOne({token: query.token}).populate('user');
     if (!session) {
       next(new Error('anonymous sessions are not allowed'));
+      return;
     }
     socket.user = session.user;
     // console.log('session', session);
